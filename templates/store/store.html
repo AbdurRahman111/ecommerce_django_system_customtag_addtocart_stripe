@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ========================= TITLE ========================= -->
+<section class="container-fluid bg-light py-5">
+    <div class="col-md-6 m-auto text-center">
+        {% if 'search' in request.path %}
+        <h1 class="h1 mb-4">Search Result</h1>
+        {% else %}
+        <h1 class="h1 mb-4">Our Store</h1>
+        <p>Browse among our wide range of <strong>comfortable</strong>, <strong>stylish </strong>and <strong>practical
+            </strong>produts!</p>
+        {% endif %}
+    </div>
+</section>
+<!-- ========================= END TITLE ========================= -->
+
+<!-- ========================= LEFT FILTER ========================= -->
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <h1 class="h2 pb-4">Filter Products</h1>
+            <ul class="list-unstyled templatemo-accordion">
+                <li class="pb-3">
+                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
+                        Category
+                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled pl-3">
+                        {% for category in links %}
+                        <li><a class="text-decoration-none"
+                                href="{{ category.get_url }}">{{ category.category_name }}</a>
+                        </li>
+                        {% endfor %}
+                        <hr>
+                        <li><a class="text-decoration-none" href="{% url 'store' %}">All Categories</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- ========================= PRODUCT CARDS ========================= -->
+        <div class="col-lg-9">
+            <header class="border-bottom mb-4 pb-3">
+                <div class="form-inline">
+                    <span class="mr-md-auto"><b>{{ product_count }}</b> Items found
+                    </span>
+                </div>
+            </header>
+            <div class="row">
+                {% if products %}
+                {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card mb-4 product-wap rounded-0">
+                        <div class="card rounded-0">
+                            <img class="card-img rounded-0 img-fluid" src="{{ product.images.url }}">
+                            <div
+                                class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-success text-white mt-2" href="{{ product.get_url }}"><i
+                                                class="far fa-eye"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body card-body-store">
+                            <a href="{{ product.get_url }}" class="text-decoration-none">
+                                <h4>{{ product.product_name }}</h4>
+                            </a>
+                            <div class="rating-star">
+                                <span>
+                                    <i class="fa fa-star{% if product.averageRating < 0.5 %}-o{% elif product.averageRating >= 0.5 and product.averageRating < 1 %}-half-alt {% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.averageRating < 1.5 %}-o{% elif product.averageRating >= 1.5 and product.averageRating < 2 %}-half-alt {% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.averageRating < 2.5 %}-o{% elif product.averageRating >= 2.5 and product.averageRating < 3 %}-half-alt {% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.averageRating < 3.5 %}-o{% elif product.averageRating >= 3.5 and product.averageRating < 4 %}-half-alt {% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.averageRating < 4.5 %}-o{% elif product.averageRating >= 4.5 and product.averageRating < 5 %}-half-alt {% endif %}"
+                                        aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <h5 class="text-center mt-3 mb-3">&#163;{{ product.price }}</h5>
+                            <div class="text-center">
+                                <a href="{{ product.get_url }}" class="btn btn-success btn-sm btn-text">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center">
+                    <h2>No result found.</h2>
+                    <a href="{% url 'store' %}" class="btn btn-success mt-4">Browse All Products</a>
+                </div>
+                {% endif %}
+            </div>
+            <!-- ========================= END PRODUCT CARDS ========================= -->
+
+            <!-- ========================= PAGINATOR  ========================= -->
+            <div class="row mt-4 mb-3">
+                {% if products.has_other_pages %}
+                <ul class="pagination pagination-lg justify-content-center">
+                    {% for i in products.paginator.page_range %}
+                    {% if products.number == i %}
+                    <li class="page-item disabled"><a
+                            class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                            href="#">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a
+                            class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+                            href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <!-- ========================= PAGINATOR END ========================= -->
+        </div>
+
+    </div>
+</div>
+{% endblock %}

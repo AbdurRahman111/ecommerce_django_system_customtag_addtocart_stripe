@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+    <div class="container">
+        {% if not bag_items %}
+        <div class="border-bag-items rounded mt-5 mb-5 pt-5 pb-5">
+            <h2 class="text-center">Your Shopping Bag is Empty.</h2>
+            <br>
+            <div class="text-center">
+                <a href="{% url 'store' %}" class="btn btn-success">Continue Shopping</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <aside class="col-lg-9">
+                <!-- ========================= MOBILE VIEW ========================= -->
+                <div class="d-block d-md-none">
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <h3 class=" mt-5 mb-5">Your Shopping Bag:</h3>
+                        </div>
+                    </div>
+                    {% for bag_item in bag_items %}
+                    <div class="row">
+                        <div class="col-12 col-sm-6 mb-2">
+                            <img src="{{ bag_item.product.images.url }}" class="img-thumbnail img-sm-small">
+                        </div>
+                        <div class="col-12 col-sm-6 mb-2">
+                            <a href="{{ bag_item.product.get_url }}"
+                                class="text-dark bag-item-name text-success">{{ bag_item.product.product_name }}</a>
+                            <p>
+                                {% if bag_item.variations.all %}
+                                {% for item in bag_item.variations.all %}
+                                {{ item.variation_category|capfirst }}:
+                                {{ item.variation_value|capfirst }}
+                                <br>
+                                {% endfor %}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-12 col-sm-6 order-sm-last">
+                            <p class="my-0">Price Each: &#163;{{ bag_item.product.price }}</p>
+                            <p><strong>Subtotal: </strong>&#163;{{ bag_item.sub_total }}</p>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="input-group input-spinner w-75">
+                                <div class="input-group-prepend">
+                                    <a href="{% url 'remove_from_bag' bag_item.product.id bag_item.id %}"
+                                        class="btn btn-success" type="button" id="button-plus">
+                                        <i class="fa fa-minus"></i>
+                                    </a>
+                                </div>
+                                <input type="text" class="form-control text-center" value="{{ bag_item.quantity }}">
+                                <div class="input-group-append">
+                                    <form action="{% url 'add_to_bag' bag_item.product.id %}" method="POST">
+                                        {% csrf_token %}
+                                        {% for item in bag_item.variations.all %}
+                                        <input type="hidden" name="{{ item.variation_category|lower }}"
+                                            value="{{ item.variation_value|capfirst }}">
+                                        {% endfor %}
+                                        <button class="btn btn-success" id="button-minus" type="submit">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <hr>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- ========================= LARGE SCREEN VIEW ========================= -->
+                <div class="table-responsive rounded d-none d-md-block border-bag-items mt-5 mb-lg-5 pt-3">
+                    <table class="table table-sm table-borderless">
+                        <thead class="text-black">
+                            <tr>
+                                <th scope="col" class="text-center">Product Info</th>
+                                <th scope="col" class="text-center"></th>
+                                <th scope="col" class="text-center">Price</th>
+                                <th scope="col" class="text-center">Qty</th>
+                                <th scope="col" class="text-center">Subtotal</th>
+                                <th scope="col" class="text-center"></th>
+                            </tr>
+                        </thead>
+
+                        {% for bag_item in bag_items %}
+                        <tr>
+                            <td class="p-3 w-25">
+                                <img src="{{ bag_item.product.images.url }}" class="img-fluid">
+                            </td>
+                            <td class="py-3">
+                                <a href="{{ bag_item.product.get_url }}"
+                                    class="text-dark bag-item-name text-success">{{ bag_item.product.product_name }}</a>
+                                <p>
+                                    {% if bag_item.variations.all %}
+                                    {% for item in bag_item.variations.all %}
+                                    {{ item.variation_category|capfirst }}:
+                                    {{ item.variation_value|capfirst }}
+                                    <br>
+                                    {% endfor %}
+                                    {% endif %}
+                                </p>
+                            </td>
+                            <td class="py-3 text-center">
+                                <p class="my-0">&#163;{{ bag_item.product.price }} </p>
+                            </td>
+                            <td class="py-3 w-20 text-center">
+                                <div class="col">
+                                    <div class="input-group input-spinner">
+                                        <div class="input-group-prepend">
+                                            <a href="{% url 'remove_from_bag' bag_item.product.id bag_item.id %}"
+                                                class="btn btn-success" type="button" id="button-plus">
+                                                <i class="fa fa-minus"></i>
+                                            </a>
+                                        </div>
+                                        <input type="text" class="form-control text-center"
+                                            value="{{ bag_item.quantity }}">
+                                        <div class="input-group-append">
+                                            <form action="{% url 'add_to_bag' bag_item.product.id %}" method="POST">
+                                                {% csrf_token %}
+                                                {% for item in bag_item.variations.all %}
+                                                <input type="hidden" name="{{ item.variation_category|lower }}"
+                                                    value="{{ item.variation_value|capfirst }}">
+                                                {% endfor %}
+                                                <button class="btn btn-success" id="button-minus" type="submit">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 text-center">
+                                <p class="my-0">&#163;{{ bag_item.sub_total }}</p>
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'remove_bag_item' bag_item.product.id bag_item.id %}"
+                                    class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you would like to empty your Bag?')">
+                                    Remove</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+            </aside>
+            <aside class="col-lg-3">
+                <div class="card mt-lg-5 mt-4 mb-5">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Total price:</dt>
+                            <dd class="text-right">&#163;{{ total }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Tax:</dt>
+                            <dd class="text-right">&#163;{{ tax }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Total:</dt>
+                            <dd class="text-right text-dark b"><strong>&#163;{{ grand_total }}</strong></dd>
+                        </dl>
+                        <hr>
+                        <div class="text-center mb-3">
+                            <i class="fab fa-cc-stripe fa-2x"></i>
+                            <i class="fab fa-cc-visa fa-2x"></i>
+                            <i class="fab fa-cc-mastercard fa-2x"></i>
+                            <i class="fab fa-cc-amex fa-2x"></i>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url 'checkout' %}" class="btn btn-success btn-block mt-2"> Checkout </a>
+                            <a href="{% url 'store' %}" class="btn btn-light btn-block mt-2">Continue Shopping</a>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

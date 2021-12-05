@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+    <div class="container">
+        <div class="row">
+            <aside class="col-lg-6 mt-5">
+                <form action="{% url 'checkout' %}" method="POST" id="payment-form">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Shipping Address</h4>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">Email</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Phone Number</label>
+                                    <input type="text" name="phone" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">Address Line 1</label>
+                                    <input type="text" name="address_line_1" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Address Line 2</label>
+                                    <input type="text" name="address_line_2" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">City</label>
+                                    <input type="text" name="city" class="form-control" required>
+                                </div>
+                                <div class="col form-group">
+                                    <label for="">Country</label>
+                                    <input type="text" name="country" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label for="">Order Note</label>
+                                <textarea name="order_note" rows="2" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="stripe-payment-box" class="mt-4 pt-3">
+                        <fieldset class="px-3">
+                            <h4>Payment</h4>
+                            <legend class="fieldset-label small text-black px-2 w-auto">Enter Your Card Details:
+                            </legend>
+                            <!-- A Stripe card element will go here -->
+                            <div class="mb-3" id="card-element"></div>
+
+                            <!-- Used to display form errors -->
+                            <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+
+                            <!-- Pass the client secret to the view so we can get the payment intent id -->
+                            <input type="hidden" value="{{ client_secret }}" name="client_secret">
+                        </fieldset>
+
+                        <div class="card-body">
+                            <dl class="">
+                                <dt>Net Price:</dt>
+                                <dd class="text-right">&#163;{{ total }}</dd>
+                            </dl>
+                            <dl class="">
+                                <dt>Tax:</dt>
+                                <dd class="text-right">&#163;{{ tax }}</dd>
+                            </dl>
+                            <dl class="">
+                                <dt>Total Amount:</dt>
+                                <dd class="text-right text-dark b"><strong>&#163;{{ grand_total }}</strong></dd>
+                            </dl>
+                            <hr>
+                            <div class="text-center">
+                                <button type="submit" id="submit-button" class="btn btn-success btn-block submit-button"
+                                    name="submits">Make Payment</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </aside>
+
+            <aside class="col-lg-6 mt-2 mt-lg-5 mb-3 mb-lg-0">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr class="text-uppercase">
+                                    <th scope="col">Product</th>
+                                    <th scope="col" width="120" class="text-center">Quantity</th>
+                                    <th scope="col" width="120">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bag_item in bag_items %}
+                                <tr>
+                                    <td>
+                                        <figure class="itemside align-items-center">
+                                            <div class="aside">
+                                                <img src="{{ bag_item.product.images.url }}" class="img-sm">
+                                            </div>
+                                            <figcaption class="info">
+                                                <a href="{{ bag_item.product.get_url }}"
+                                                    class="title text-success bag-item-name">{{ bag_item.product.product_name }}</a>
+                                                <p>
+                                                    {% if bag_item.variations.all %}
+                                                    {% for item in bag_item.variations.all %}
+                                                    {{ item.variation_category|capfirst }}:
+                                                    {{ item.variation_value|capfirst }}
+                                                    <br>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </p>
+                                            </figcaption>
+                                        </figure>
+                                    </td>
+                                    <td class="text-center">
+                                        <label for="">{{ bag_item.quantity }}</label>
+                                    </td>
+                                    <td>
+                                        <div class="price-wrap">
+                                            <var class="price">&#163;{{ bag_item.sub_total }}</var>
+                                            <br>
+                                            <small class="text-muted">&#163;{{ bag_item.product.price }}
+                                                each</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{{ stripe_public_key|json_script:"id_stripe_public_key" }}
+{{ client_secret|json_script:"id_client_secret" }}
+<script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
+{% endblock %}

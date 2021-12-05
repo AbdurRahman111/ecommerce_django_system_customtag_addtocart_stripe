@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="section-conten padding-y bg">
+
+    {% include "includes/alerts.html" %}
+
+    <div class="container">
+        <div class="row">
+            <aside class="col-md-3">
+                <!--   SIDEBAR   -->
+                <ul class="list-group">
+                    <a class="list-group-item active" href="#"> My order history </a>
+                </ul>
+                <br>
+                <a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span
+                        class="text">Log
+                        out</span> </a>
+                <!--   SIDEBAR .//END   -->
+            </aside>
+            <main class="col-md-9">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order Number</th>
+                            <th scope="col">Order Total</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if all_orders %}
+                    {% for ordr in all_orders %}
+                        <tr>
+                            <th scope="row"><a href="{% url 'success' ordr.order_number %}">{{ordr.order_number}}</a></th>
+                            <td>&#163;{{ordr.order_total}}</td>
+                            <td>{{ordr.created_at}}</td>
+                            <td>{% if ordr.order_note %}{{ordr.order_note}}{% else %}None{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                        <tr>
+                            <th scope="row" colspan="4">You Have No Order To Show!</th>
+
+                        </tr>
+                    {% endif %}
+
+                    </tbody>
+                </table>
+            </main>
+        </div> <!-- row.// -->
+    </div>
+
+
+</section>
+
+{% endblock %}

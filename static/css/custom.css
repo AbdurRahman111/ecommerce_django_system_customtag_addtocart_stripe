@@ -1,0 +1,193 @@
+/* ------- TEXT LINK ------- */
+
+.green-link {
+    color: #59ab6e;
+    text-decoration: none;
+}
+
+.green-link:hover {
+    color: #59ab6e;
+    text-decoration: underline;
+}
+
+/* ------- NAVBAR ------- */
+
+.home-logo {
+    font-family: 'Roboto', sans-serif;
+    font-size: 48px !important;
+}
+
+/* ------- PRODUCT CARDS ------- */
+
+.card-img-size {
+    height: 250px;
+    object-fit: cover;
+}
+
+.card-body-store {
+    min-height: 220px;
+}
+
+.card-body-homepage {
+    min-height: 300px;
+}
+
+.rating-star i {
+    color: #ffb503;
+}
+
+.card-shadow {
+    -webkit-box-shadow: 0px 0px 19px -1px rgba(0, 0, 0, 0.17);
+    box-shadow: 0px 0px 19px -1px rgba(0, 0, 0, 0.17);
+    transition: 0.3s ease-in-out;
+}
+
+.card-shadow:hover {
+    -webkit-box-shadow: 0px 0px 19px -1px rgba(0, 0, 0, 0.65);
+    box-shadow: 0px 0px 19px -1px rgba(0, 0, 0, 0.65);
+    transition: 0.3s ease-in-out;
+}
+
+.btn-text {
+    text-decoration: none;
+    color: #fff !important;
+    font-size: 16px !important;
+
+}
+
+/* ------- BAG.HTML ------- */
+
+.img-sm {
+    width: 80px;
+    height: 80px;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.bag-item-name {
+    text-decoration: none;
+    font-weight: 600 !important;
+}
+
+.border-bag-items {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.fa-cc-stripe,
+.fa-cc-visa,
+.fa-cc-mastercard,
+.fa-cc-amex {
+    color: #0d6efd;
+}
+
+/* ------- SUCCESS STORIES BLOG ------- */
+
+.blog-article {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 20px;
+    padding: 15px;
+    margin-top: 15px;
+    padding-top: 30px;
+}
+
+.blog-intro {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.blog-article>p,
+.blog-content>p {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.blog-content {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.blog-category-left {
+    color: var(--bs-dark);
+}
+
+.blog-category-left:hover {
+    color: #59ab6e;
+}
+
+.comment-box {
+    padding: 18px;
+    background: #fbfdff;
+    border-radius: 0.37rem;
+    border: 1px solid #e9eef5;
+}
+
+.post-comment-box {
+    position: relative;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    clear: both !important;
+}
+
+.post-comment-box:after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border: 1px solid #e9eef5;
+    border-radius: 10px;
+    background-color: #fbfdff;
+    z-index: -5;
+}
+
+/* ------- CONTACT PAGE ------- */
+
+.google-map {
+    height: 300px;
+}
+
+#contact-info i {
+    color: #59ab6e;
+}
+
+/* ------- NAVBAR DROPDOWN ON HOVER ------- */
+
+@media all and (min-width: 992px) {
+    .navbar .nav-item .dropdown-menu {
+        display: none;
+    }
+
+    .navbar .nav-item:hover .nav-link {}
+
+    .navbar .nav-item:hover .dropdown-menu {
+        display: block;
+    }
+
+    .navbar .nav-item .dropdown-menu {
+        margin-top: 0;
+    }
+}
+
+@media all and (max-width: 992px) {
+
+    .blog-intro,
+    .blog-content {
+        width: 80%;
+    }
+}
+
+@media all and (max-width: 576px) {
+    .img-sm-small {
+        max-width: 300px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .blog-content {
+        width: 95%;
+    }
+}
